@@ -7,7 +7,7 @@ API_ID = int(os.getenv("25160319"))
 API_HASH = os.getenv("91cb0805c2623fda9b91ab922d5bb3f9")
 SESSION_STRING = os.getenv("1ApWapzMBu4w958H9PEN1q2nlrmxNRLICvyvUoXnp6FfUlBmwkSqMoe4mbQUBiS-hPtZqnz3GY5eGw0t-3QoVSsyR1ub9CkQ_NGEcAU1Iqx6ZIiSAWAYQCo0GnylYb6dq9psdV7RdpjayJJgdjqv3GIMpkETfI9wroPMXvSK9Es99mySOiYsE6aigmDPIueeTp02h4U6S_zDLM7h-az6cid_DA7uzOsApp2mJb1yWTG4IAK0Xu0qw_fKX10t8kGgZqxx20AkEcjyudBFdO8Oqq3vkX5FztPcFVCrI6zbOeWygG09-vtoPdokEPDBXnug11TbtczSmKQXZN_TCJr3iDXbBJpvhdeE=")
 
-SOURCE_CHAT = int(os.getenv("1002772634438"))     # masalan: -100123...
+SOURCE_CHAT = int(os.getenv("-1002772634438"))     # masalan: -100123...
 MESSAGE_ID   = int(os.getenv("3"))     # forward qilinadigan xabar ID
 
 # TARGET_CHATS ni Secrets’da vergul bilan yozing:  -100111,-100222,-100333
@@ -33,6 +33,6 @@ async def main():
                 await asyncio.sleep(e.seconds)
             except Exception as e:
                 print(f"⚠️ Xato ({chat}): {e}")
-        await asyncio.sleep(300)  # 5 minut
+        await asyncio.sleep(15)  # 5 minut
 
 asyncio.run(main())
