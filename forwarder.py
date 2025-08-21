@@ -9,7 +9,22 @@ string = "1ApWapzMBu4w958H9PEN1q2nlrmxNRLICvyvUoXnp6FfUlBmwkSqMoe4mbQUBiS-hPtZqn
 # Forward qilinadigan sozlamalar
 SOURCE_CHAT = -1002772634438   # manba guruh
 SOURCE_MSG_ID = 3            # qaysi xabarni forward qilish kerak
-TARGET_CHAT = -1002500832549   # bitta maqsad guruh
+# Forward qilinadigan guruhlar ID ro'yxati
+TARGET_CHAT = [
+    2305699151,
+    1919071943,
+    2437075012,
+    2311823407,
+    2377383060,
+    2016923230,
+    2849134056,
+    2741551279,
+    2526964072,
+    2222348198,
+    2778498963,
+    2500832549
+]
+
 
 async def main():
     client = TelegramClient(StringSession(string), api_id, api_hash)
