@@ -21,7 +21,7 @@ async def main():
             print("✅ Xabar forward qilindi")
         except Exception as e:
             print("⚠️ Xatolik:", e)
-        await asyncio.sleep(60)  # har 5 minutda
+        await asyncio.sleep(30)  # har 5 minutda
         
 
 if __name__ == "__main__":
