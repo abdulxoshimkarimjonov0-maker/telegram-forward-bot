@@ -1,44 +1,38 @@
+import os, asyncio
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-import asyncio
+from telethon.errors import FloodWaitError
 
-api_id = 25160319   # o'z API_ID
-api_hash = "91cb0805c2623fda9b91ab922d5bb3f9"  # o'z API_HASH
-string = "1ApWapzMBu4w958H9PEN1q2nlrmxNRLICvyvUoXnp6FfUlBmwkSqMoe4mbQUBiS-hPtZqnz3GY5eGw0t-3QoVSsyR1ub9CkQ_NGEcAU1Iqx6ZIiSAWAYQCo0GnylYb6dq9psdV7RdpjayJJgdjqv3GIMpkETfI9wroPMXvSK9Es99mySOiYsE6aigmDPIueeTp02h4U6S_zDLM7h-az6cid_DA7uzOsApp2mJb1yWTG4IAK0Xu0qw_fKX10t8kGgZqxx20AkEcjyudBFdO8Oqq3vkX5FztPcFVCrI6zbOeWygG09-vtoPdokEPDBXnug11TbtczSmKQXZN_TCJr3iDXbBJpvhdeE="  # oldindan olingan String Session
+API_ID = int(os.getenv("25160319"))
+API_HASH = os.getenv("91cb0805c2623fda9b91ab922d5bb3f9")
+SESSION_STRING = os.getenv("1ApWapzMBu4w958H9PEN1q2nlrmxNRLICvyvUoXnp6FfUlBmwkSqMoe4mbQUBiS-hPtZqnz3GY5eGw0t-3QoVSsyR1ub9CkQ_NGEcAU1Iqx6ZIiSAWAYQCo0GnylYb6dq9psdV7RdpjayJJgdjqv3GIMpkETfI9wroPMXvSK9Es99mySOiYsE6aigmDPIueeTp02h4U6S_zDLM7h-az6cid_DA7uzOsApp2mJb1yWTG4IAK0Xu0qw_fKX10t8kGgZqxx20AkEcjyudBFdO8Oqq3vkX5FztPcFVCrI6zbOeWygG09-vtoPdokEPDBXnug11TbtczSmKQXZN_TCJr3iDXbBJpvhdeE=")
 
-# Forward qilinadigan sozlamalar
-SOURCE_CHAT = -1002772634438   # manba guruh
-SOURCE_MSG_ID = 3            # qaysi xabarni forward qilish kerak
-# Forward qilinadigan guruhlar ID ro'yxati
-TARGET_CHAT = [
-    -1002305699151,
-    -1001919071943,
-    -1002437075012,
-    -1002311823407,
-    -1002377383060,
-    -1002016923230,
-    -1002849134056,
-    -1002741551279,
-    -1002526964072,
-    -1002222348198,
-    -1002778498963,
-    -1002500832549
-]
+SOURCE_CHAT = int(os.getenv("1002772634438"))     # masalan: -100123...
+MESSAGE_ID   = int(os.getenv("3"))     # forward qilinadigan xabar ID
 
+# TARGET_CHATS ni Secrets’da vergul bilan yozing:  -100111,-100222,-100333
+def parse_targets(s: str):
+    return [int(x.strip()) for x in s.split(",") if x.strip()]
 
+TARGET_CHATS = parse_targets(os.getenv("TARGET_CHATS", "-1002500832549"))
+
+client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
 async def main():
-    client = TelegramClient(StringSession(string), api_id, api_hash)
     await client.start()
+    print("✅ Ishga tushdi. Targetlar:", TARGET_CHATS)
 
     while True:
-        try:
-            await client.forward_messages(TARGET_CHAT, SOURCE_MSG_ID, SOURCE_CHAT)
-            print("✅ Xabar forward qilindi")
-        except Exception as e:
-            print("⚠️ Xatolik:", e)
-        await asyncio.sleep(30)  # har 5 minutda
-        
+        for chat in TARGET_CHATS:
+            try:
+                # 1-argument: bitta chat; 2-argument: xabar ID; 3-argument: manba chat
+                await client.forward_messages(chat, MESSAGE_ID, SOURCE_CHAT)
+                print(f"➡️ Forward OK: {chat}")
+            except FloodWaitError as e:
+                print(f"⏳ FloodWait {e.seconds}s (chat {chat})")
+                await asyncio.sleep(e.seconds)
+            except Exception as e:
+                print(f"⚠️ Xato ({chat}): {e}")
+        await asyncio.sleep(300)  # 5 minut
 
-if __name__ == "__main__":
-    asyncio.run(main())
+asyncio.run(main())
